@@ -183,6 +183,11 @@ void generateLocaleFile(String locale, List<Map> localeData, String targetDir,
 BasicTranslatedMessage? recreateIntlObjects(String id, data) {
   if (id.startsWith("@")) return null;
   if (data == null) return null;
+
+  if (data is Map) {
+    return recreateIntlObjects(data.keys.first, data.values.first);
+  }
+  
   var parsed = pluralAndGenderParser.parse(data).value;
   if (parsed is LiteralString && parsed.string.isEmpty) {
     parsed = plainParser.parse(data).value;

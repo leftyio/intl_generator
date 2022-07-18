@@ -176,7 +176,7 @@ import 'package:$intlImportPath/message_lookup_by_library.dart';
 $extraImports
 final messages = MessageLookup();
 
-typedef String MessageIfAbsent(String? messageStr, List<Object>? args);
+typedef String MessageIfAbsent(String messageStr, List<Object> args);
 
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => '$locale';
@@ -186,14 +186,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   String overrideLookup = """
   @override
-  String? lookupMessage(
-      String? messageText, 
-      String? locale, 
-      String? name,
-      List<Object>? args, 
-      String? meaning,
+  String lookupMessage(
+      String messageText, 
+      String locale, 
+      String name,
+      List<Object> args, 
+      String meaning,
       {MessageIfAbsent? ifAbsent}) {
-    MessageIfAbsent failedLookup = (String? message_str, List<Object>? args) {
+    MessageIfAbsent failedLookup = (String message_str, List<Object> args) {
       // If there's no message_str, then we are an internal lookup, e.g. an
       // embedded plural, and shouldn't fail.
       if (message_str == null) return '';
@@ -230,7 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
       output.write(loadOperation);
     }
     output.write("};\n");
-    output.write("\nMessageLookupByLibrary? _findExact(String localeName) {\n"
+    output.write("\nMessageLookupByLibrary _findExact(String localeName) {\n"
         "  switch (localeName) {\n");
     for (var rawLocale in allLocales) {
       var locale = Intl.canonicalizedLocale(rawLocale);
@@ -294,7 +294,7 @@ bool _messagesExistFor(String locale) {
   }
 }
 
-MessageLookupByLibrary? _findGeneratedMessagesFor(String locale) {
+MessageLookupByLibrary _findGeneratedMessagesFor(String locale) {
   final actualLocale = Intl.verifiedLocale(locale, _messagesExistFor,
       onFailure: (_) => null);
   if (actualLocale == null) return null;
@@ -314,7 +314,7 @@ import '${generatedFilePrefix}messages_all.dart' show evaluateJsonTemplate;
   String prologue(locale) =>
       super.prologue(locale) +
       '''
-  String? evaluateMessage(translation, List<dynamic> args) {
+  String evaluateMessage(translation, List<dynamic> args) {
     return evaluateJsonTemplate(translation, args);
   }
 ''';
@@ -371,7 +371,7 @@ import '${generatedFilePrefix}messages_all.dart' show evaluateJsonTemplate;
 ///   * \['Intl.gender', String gender, (templates for female, male, other)\]
 ///   * \['Intl.select', String choice, { 'case' : template, ...} \]
 ///   * \['text alternating with ', 0 , ' indexes in the argument list'\]
-String? evaluateJsonTemplate(dynamic input, List<dynamic> args) {
+String evaluateJsonTemplate(dynamic input, List<dynamic> args) {
   if (input == null) return null;
   if (input is String) return input;
   if (input is int) {
